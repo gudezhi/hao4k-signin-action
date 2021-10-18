@@ -1,14 +1,14 @@
 import requests
 import os
 import re
+import json
 
 # hao4k 账户信息
 username = os.environ["HAO4K_USERNAME"]
 password = os.environ["HAO4K_PASSWORD"]
-# 添加 server 酱通知
-sckey = os.environ["SERVERCHAN_SCKEY"]
-send_url = "https://sctapi.ftqq.com/%s.send" % (sckey)
-send_content = 'Server ERROR'
+# 企微通知
+corpid = os.environ["corpid"]
+corpsecret = os.environ["corpsecret"]
 
 # hao4k 签到 url
 user_url = "https://www.hao4k.cn//member.php?mod=logging&action=login"
@@ -55,6 +55,32 @@ def run(form_data):
       return 'signin failed!'
 
 
+def sendMsg(data):
+    token_url = "https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid="+corpid+"&corpsecret="+corpsecret
+    base_url = "https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token="
+    s = requests.Session()
+    s.headers.update(
+        {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.106 Safari/537.36'})
+    headers = {"Content-Type": "text/html", 'Connection': 'close'}
+    user_resp = s.get(token_url, headers=headers)
+    # print(user_resp.text)
+    access_token = user_resp.json()['access_token']
+    form_data = {
+        "touser": "GuFeng",
+        "msgtype": "text",
+        "agentid": 1000002,
+        "text": {
+            "content": data
+        },
+        "safe": 0,
+        "enable_id_trans": 0,
+        "enable_duplicate_check": 0,
+        "duplicate_check_interval": 1800
+    }
+    resp = s.post(base_url+access_token, headers=headers,
+                  data=json.dumps(form_data))
+    print(resp.json())
+
 if __name__ == "__main__":
   signin_log = run(form_data)
   if signin_log is None:
@@ -63,6 +89,5 @@ if __name__ == "__main__":
   else:
     send_content = signin_log
     print(signin_log)
-  params = {'text': 'hao4k 每日签到结果通知：', 'desp': send_content}
-  requests.post(send_url, params=params)
+  sendMsg("hao4k 每日签到结果通知：\n" + send_content)
   print('已通知 server 酱')
