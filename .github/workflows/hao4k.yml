@@ -26,7 +26,7 @@ jobs:
     - name: Hao4k auto sign in
       env:
         HAO4K_USERNAME: ${{ secrets.HAO4K_USERNAME }}
-        HAO4K_PASSWORD: ${{ secrets.HAO4K_PASSWORD }}
+        HAO4K_SALTKEY: ${{ secrets.HAO4K_SALTKEY }}
         corpid: ${{ secrets.corpid }}
         corpsecret: ${{ secrets.corpsecret }}
       run: python signin.py
