@@ -6,6 +6,7 @@ on:
       - main
   schedule:
     - cron: '0 8,22 * * *'
+  workflow_dispatch:
 
 jobs:
   Hao4K-autoSignIn:
@@ -26,7 +27,7 @@ jobs:
     - name: Hao4k auto sign in
       env:
         HAO4K_USERNAME: ${{ secrets.HAO4K_USERNAME }}
-        HAO4K_PASSWORD: ${{ secrets.HAO4K_PASSWORD }}
+        HAO4K_SALTKEY: ${{ secrets.HAO4K_SALTKEY }}
         corpid: ${{ secrets.corpid }}
         corpsecret: ${{ secrets.corpsecret }}
         pushkey: ${{ secrets.pushkey }}
