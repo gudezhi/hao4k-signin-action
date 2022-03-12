@@ -29,4 +29,5 @@ jobs:
         HAO4K_PASSWORD: ${{ secrets.HAO4K_PASSWORD }}
         corpid: ${{ secrets.corpid }}
         corpsecret: ${{ secrets.corpsecret }}
+        pushkey: ${{ secrets.pushkey }}
       run: python signin.py

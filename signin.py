@@ -1,3 +1,4 @@
+import urllib.parse
 import requests
 import os
 import re
@@ -9,6 +10,12 @@ saltkey = os.environ["HAO4K_SALTKEY"]
 # 企微通知
 corpid = os.environ["corpid"]
 corpsecret = os.environ["corpsecret"]
+pushkey = os.environ["pushkey"]
+
+def sendMsg2Pushdeer(send_content):
+    base_url = "https://api2.pushdeer.com/message/push?pushkey="+pushkey+"&text="+urllib.parse.quote(send_content)
+    print(base_url)
+    resp = requests.get(base_url)
 
 # hao4k 签到 url
 user_url = "https://www.hao4k.cn//member.php?mod=logging&action=login"
@@ -86,5 +93,7 @@ if __name__ == "__main__":
   else:
     send_content = signin_log
     print(signin_log)
-  sendMsg("hao4k 每日签到结果通知：\n" + send_content)
+  send_content = "每日签到 hao4k\n" + send_content
+  sendMsg(send_content)
   print('已通知 server 酱')
+  sendMsg2Pushdeer(send_content)
